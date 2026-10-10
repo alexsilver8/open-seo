@@ -2,28 +2,6 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
-## Unreleased
-
-### Removed
-
-- The Branding section in Settings. Name, logo, accent color, footer and call to action still
-  white-label reports when set in `data/settings.json` or through `PUT /api/settings`.
-- Leads and the embeddable audit widget: the Leads page, `/embed`, `embed.js`, `/api/leads`,
-  the embed settings and the `email` and `name` fields of `POST /api/audit`. An existing
-  `data/leads.json` is left in place but no longer read.
-
-### Share previews
-
-- See how a link looks on Google, Facebook, X, LinkedIn, Slack, Discord, WhatsApp and iMessage,
-  with what to fix for each. Each preview follows that platform's rules: large or small image,
-  card type, image size and file size limits, and theme color.
-- Every share image, favicon, Apple touch icon and web app manifest icon is downloaded and
-  measured: real pixel size (including every size inside .ico files), format and weight.
-- A table of every Open Graph, X, icon and app tag on the page.
-- In every report, and as a standalone Share preview page and `GET /api/preview`.
-- New checks: share image, Apple touch icon, web app manifest and theme color. The Open Graph,
-  X card and favicon checks now look at the images and icons themselves, not just the tags.
-
 ## 0.1.0
 
 The first release.

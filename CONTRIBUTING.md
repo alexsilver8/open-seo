@@ -212,7 +212,9 @@ PR_TITLE="✨ feat(report): add a cover page to PDFs" node scripts/check-pr-titl
 
 ## Releasing
 
-Bump the version in `package.json`, add a section to `CHANGELOG.md` listing the merged pull
-requests, and open a pull request titled like `🔖 chore: release 0.2.0`. After it merges, tag
-the merge commit (`git tag v0.2.0 && git push --tags`) and publish a GitHub release; its notes
-are grouped by the pull request labels (see `.github/release.yml`).
+Releases are automated with [release-please](https://github.com/googleapis/release-please). It
+reads the Conventional Commit titles merged into `main` and keeps a release pull request open
+that bumps the version in `package.json` and adds the notes to `CHANGELOG.md`; edit the notes in
+that pull request if they need it. Merging it tags the release, publishes a GitHub release and
+pushes the Docker image to `ghcr.io/alexsilver8/openseo` for Intel and ARM, tagged `latest`, the
+version (`0.2.0`) and the minor line (`0.2`). See `.github/workflows/release.yml`.

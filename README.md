@@ -8,7 +8,17 @@ AI search readiness, with the fixes ranked by how much they matter.
 
 No paid APIs, no account, no database to set up.
 
-![An OpenSEO report](docs/report.png)
+[![ci](https://github.com/alexsilver8/openseo/actions/workflows/ci.yml/badge.svg)](https://github.com/alexsilver8/openseo/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/alexsilver8/openseo)](https://github.com/alexsilver8/openseo/releases)
+[![MIT license](https://img.shields.io/github/license/alexsilver8/openseo)](LICENSE)
+
+```bash
+docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo
+```
+
+Then open [http://localhost:3000](http://localhost:3000). [More ways to run it](#run-it).
+
+![OpenSEO auditing a site, then showing how its link looks on Google, Facebook, X and more](docs/demo.gif)
 
 OpenSEO is an independent project inspired by hosted audit tools like SEOptimer. It is not
 affiliated with any of them.
@@ -54,6 +64,47 @@ Checks that pass earn their full weight, warnings half, failures nothing. Inform
 
 ## Run it
 
+All you need is [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker
+Engine on Linux). Start OpenSEO with:
+
+```bash
+docker run -d --name openseo --restart unless-stopped -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo
+```
+
+Open [http://localhost:3000](http://localhost:3000) and paste a URL. OpenSEO keeps running in the
+background and starts again with Docker. Reports, crawls and settings live in the `openseo-data`
+volume, so they survive restarts and updates. The image works on Intel and Apple silicon.
+
+| To                    | Run                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| Stop it               | `docker stop openseo`                                                                |
+| Start it again        | `docker start openseo`                                                               |
+| See what it's doing   | `docker logs -f openseo`                                                             |
+| Update to the latest  | `docker pull ghcr.io/alexsilver8/openseo`, then `docker rm -f openseo` and run again |
+| Use another port      | Change `-p 3000:3000` to `-p 8080:3000`                                              |
+| Delete all saved data | `docker rm -f openseo && docker volume rm openseo-data`                              |
+
+To turn on Core Web Vitals, add a free PageSpeed API key under **Settings** in the app. Other
+options from the table below go in with `-e`, like `-e ADMIN_PASSWORD=…`.
+
+To audit a site running on your own computer, add
+`-e OPENSEO_ALLOW_PRIVATE=true --add-host host.docker.internal:host-gateway` to the command and
+use `http://host.docker.internal:<port>` instead of `localhost` (inside Docker, `localhost` is
+OpenSEO itself).
+
+### Build it from source
+
+```bash
+git clone https://github.com/alexsilver8/openseo.git
+cd openseo
+docker compose up -d
+```
+
+The first build takes a few minutes. With Compose, put options in a `.env` file next to
+`docker-compose.yml`; `docker compose up -d --build` picks up new code after a `git pull`.
+
+### Without Docker
+
 Requires Node.js 22.12 or newer and [pnpm](https://pnpm.io/installation) 12
 (`npm install -g pnpm` if you don't have it).
 
@@ -62,22 +113,12 @@ pnpm install
 pnpm dev             # http://localhost:3000
 ```
 
-For production:
-
-```bash
-pnpm build
-pnpm start
-```
-
-Or with Docker, which keeps your data in a volume:
-
-```bash
-docker compose up -d
-```
+Or for a faster production build: `pnpm build && pnpm start`.
 
 ### Settings
 
-Everything below is optional. Copy `.env.example` to `.env.local` to set them.
+Everything below is optional. With `docker run`, pass them with `-e`; with Compose, put them in a
+`.env` file next to `docker-compose.yml`; without Docker, copy `.env.example` to `.env.local`.
 
 | Variable                 | Does                                                                                               |
 | ------------------------ | -------------------------------------------------------------------------------------------------- |
@@ -89,8 +130,8 @@ Everything below is optional. Copy `.env.example` to `.env.local` to set them.
 | `OPENSEO_ALLOW_PRIVATE`  | Set to `true` to audit localhost and private networks                                              |
 | `OPENSEO_USER_AGENT`     | The User-Agent sent to audited sites                                                               |
 
-On a public server, set `ADMIN_PASSWORD`. Shared reports, the home page and Share preview stay
-public; everything else asks for the password.
+You only need `ADMIN_PASSWORD` if other people can reach your OpenSEO, like on a shared network.
+Shared reports, the home page and Share preview stay open; everything else asks for it.
 
 The theme (light by default, or dark, or matching the system), PageSpeed, how many links to check
 and how many pages to crawl are in the app under **Settings**.
