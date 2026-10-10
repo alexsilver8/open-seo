@@ -2,6 +2,13 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
+## [0.2.0](https://github.com/alexsilver8/openseo/compare/v0.1.0...v0.2.0) (2026-10-10)
+
+
+### Features
+
+* publish a docker image and add a demo to the readme ([#4](https://github.com/alexsilver8/openseo/issues/4)) ([06fa6e1](https://github.com/alexsilver8/openseo/commit/06fa6e1177d4f85bb896fa59ee9577676230d733))
+
 ## 0.1.0
 
 The first release.

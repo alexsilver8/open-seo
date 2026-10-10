@@ -1,7 +1,7 @@
 {
 	"name": "openseo",
 	"productName": "OpenSEO",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "An open-source SEO audit tool: graded website reports, a site crawler, PDF reports and link previews for every major platform.",
 	"author": "Alexander Silver",
 	"homepage": "https://github.com/alexsilver8/openseo",
