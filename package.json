@@ -30,6 +30,7 @@
 		"test:watch": "vitest",
 		"format": "prettier --write .",
 		"cleaner": "node scripts/cleaner.mjs",
+		"lint": "node scripts/cleaner.mjs",
 		"scan": "tsx scripts/scan.ts",
 		"crawl": "tsx scripts/crawl.ts"
 	},

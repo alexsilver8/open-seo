@@ -176,39 +176,33 @@ Add a case to `tests/checks.test.ts` with a small HTML fixture.
 `main` is protected: every change goes through a pull request, and two checks must pass before
 it can merge:
 
-- `check`: typecheck, tests, the cleaner and build
-- `title`: the pull request title follows the format below
+- `ci`: the cleaner, type check, build and tests, on Node 22 and 24
+- `pr-title`: the pull request title follows the format below
 
 Pull requests are squash-merged, and the title becomes the commit message on `main`, so the title
-matters more than the commits on your branch. The title also sets the pull request's label
-(`fix` → `bug`, `feat` → `enhancement`, `docs` → `documentation`, and the type's own name for the
-rest, plus `breaking change` for `!`), and whoever opens a pull request is assigned to it. Pull
-request titles and commit messages use [gitmoji](https://gitmoji.dev) with
-[Conventional Commits](https://www.conventionalcommits.org). Only emojis from the official
-gitmoji list are accepted, typed as the emoji itself (`✨`, not `:sparkles:`):
+matters more than the commits on your branch. Releases are built from these titles too: they pick
+the next version and become the changelog. Titles follow
+[Conventional Commits](https://www.conventionalcommits.org):
 
 ```
-<gitmoji> <type>(<scope>): <summary>
+<type>(<scope>): <summary>
 ```
 
-| Example                                         | When                       |
-| ----------------------------------------------- | -------------------------- |
-| `✨ feat(report): add a cover page to PDFs`     | A new feature              |
-| `🐛 fix(crawler): stop at the page limit`       | A bug fix                  |
-| `💄 style(settings): line up the theme options` | UI or styling only         |
-| `♻️ refactor(store): split crawls from reports` | Code change, same behavior |
-| `✅ test(checks): cover hreflang`               | Tests                      |
-| `📝 docs: explain share previews`               | Documentation              |
-| `🔧 chore: switch from npm to pnpm`             | Tooling and config         |
+| Example                                      | When                                   |
+| -------------------------------------------- | -------------------------------------- |
+| `feat(report): add a cover page to PDFs`     | A new feature (the next minor version) |
+| `fix(crawler): stop at the page limit`       | A bug fix (the next patch version)     |
+| `perf(audit): fetch the sitemap in parallel` | Faster, same behavior                  |
+| `docs: explain share previews`               | Documentation                          |
+| `refactor(store): split crawls from reports` | Code change, same behavior             |
+| `test(checks): cover hreflang`               | Tests                                  |
+| `style: format the crawler with Prettier`    | Formatting only                        |
+| `chore: switch from npm to pnpm`             | Tooling and config                     |
 
-The scope is optional; use the area you touched (`audit`, `checks`, `crawler`, `report`,
+Start the summary with a lowercase letter; the check rejects titles that don't. The scope is
+optional; use the area you touched (`audit`, `checks`, `crawler`, `report`, `share`,
 `settings`, `api`, `ci`). Add `!` after the type or scope for a breaking change
-(`💥 feat(api)!: …`). The full rules live in `scripts/check-pr-title.mjs`; to try a title
-locally:
-
-```bash
-PR_TITLE="✨ feat(report): add a cover page to PDFs" node scripts/check-pr-title.mjs
-```
+(`feat(api)!: …`).
 
 ## Releasing
 
