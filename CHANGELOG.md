@@ -2,12 +2,35 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
-## [0.2.0](https://github.com/alexsilver8/openseo/compare/v0.1.0...v0.2.0) (2026-10-10)
+## [0.2.0](https://github.com/alexsilver8/openseo/releases/tag/v0.2.0) (2026-10-10)
 
+### Share previews
 
-### Features
+- See how a link looks on Google, Facebook, X, LinkedIn, Slack, Discord, WhatsApp and iMessage,
+  with what to fix for each. Each preview follows that platform's rules: large or small image,
+  card type, image size and file size limits, and theme color.
+- Every share image, favicon, Apple touch icon and web app manifest icon is downloaded and
+  measured: real pixel size (including every size inside .ico files), format and weight.
+- A table of every Open Graph, X, icon and app tag on the page.
+- In every report, and as a standalone Share preview page and `GET /api/preview`.
+- New checks: share image, Apple touch icon, web app manifest and theme color. The Open Graph,
+  X card and favicon checks now look at the images and icons themselves, not just the tags.
 
-* publish a docker image and add a demo to the readme ([#4](https://github.com/alexsilver8/openseo/issues/4)) ([06fa6e1](https://github.com/alexsilver8/openseo/commit/06fa6e1177d4f85bb896fa59ee9577676230d733))
+### Run it with one command
+
+- A Docker image for Intel and ARM is published to `ghcr.io/alexsilver8/openseo` with every
+  release:
+  `docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo`
+- Fixed the Dockerfile, which copied a `public` folder that no longer exists and broke the build.
+- `docker compose` passes every option from `.env` and can reach sites on your own computer.
+
+### Removed
+
+- The Branding section in Settings. Name, logo, accent color, footer and call to action still
+  white-label reports when set in `data/settings.json` or through `PUT /api/settings`.
+- Leads and the embeddable audit widget: the Leads page, `/embed`, `embed.js`, `/api/leads`,
+  the embed settings and the `email` and `name` fields of `POST /api/audit`. An existing
+  `data/leads.json` is left in place but no longer read.
 
 ## 0.1.0
 
