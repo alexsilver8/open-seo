@@ -2,6 +2,16 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
+## [0.3.0](https://github.com/alexsilver8/openseo/compare/v0.2.0...v0.3.0) (2026-10-11)
+
+
+### Features
+
+* add a github action that checks preview deploys ([#16](https://github.com/alexsilver8/openseo/issues/16)) ([4815651](https://github.com/alexsilver8/openseo/commit/48156511bed45fef90ae5a8e28657d42c48c211a))
+* add an mcp server ([#17](https://github.com/alexsilver8/openseo/issues/17)) ([a88a1ec](https://github.com/alexsilver8/openseo/commit/a88a1ec41c914c74a2a62ac83167c3ce8b8ffa75))
+* compare two audits ([#14](https://github.com/alexsilver8/openseo/issues/14)) ([8d98ba1](https://github.com/alexsilver8/openseo/commit/8d98ba170185905e30cdaefbaa62b189a5510f36))
+* monitor pages and send alerts ([#15](https://github.com/alexsilver8/openseo/issues/15)) ([b947508](https://github.com/alexsilver8/openseo/commit/b947508d423f578822b4e58d44e778275291849d))
+
 ## [0.2.0](https://github.com/alexsilver8/openseo/releases/tag/v0.2.0) (2026-10-10)
 
 ### Share previews
