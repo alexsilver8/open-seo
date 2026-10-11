@@ -17,6 +17,8 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
+# For MCP clients that only speak stdio: docker exec -i openseo node mcp-stdio.mjs
+COPY --from=build /app/scripts/mcp-stdio.mjs ./mcp-stdio.mjs
 RUN mkdir -p /data && chown node:node /data
 USER node
 VOLUME /data

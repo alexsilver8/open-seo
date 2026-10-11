@@ -19,7 +19,7 @@ function isPublic(request: NextRequest): boolean {
  * Endpoints that act for the admin. A page on another site can make a visitor's browser POST plain
  * text or a form, but not JSON, so these only take JSON.
  */
-const JSON_ONLY = /^\/api\/(monitors|alerts)(\/|$)/
+const JSON_ONLY = /^\/api\/(monitors|alerts|mcp)(\/|$)/
 
 /**
  * With ADMIN_PASSWORD set, history, crawls and settings ask for a password (user "admin").

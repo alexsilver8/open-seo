@@ -6,5 +6,6 @@ export const SOURCE_LABELS: Record<ReportSource, string> = {
 	embed: 'Embed',
 	api: 'API',
 	cli: 'Terminal',
-	monitor: 'Monitor'
+	monitor: 'Monitor',
+	mcp: 'MCP'
 }

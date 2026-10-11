@@ -43,6 +43,8 @@ affiliated with any of them.
   set in `data/settings.json`.
 - **Has an API, a CLI and a GitHub Action** that fails a pull request when its preview deploy
   scores lower than production or breaks a check.
+- **Works with AI assistants**: a built-in MCP server lets Claude, Cursor and other AI tools run
+  audits, read reports, compare them, crawl sites and set up monitors.
 - **Checks AI search readiness**: whether ChatGPT, Claude and Perplexity can crawl and quote the
   page, llms.txt, server-rendered content and entity markup.
 - **Shows how your links look when shared** on Google, Facebook, X, LinkedIn, Slack, Discord,
@@ -246,6 +248,7 @@ curl -N -X POST https://your-openseo/api/audit -d '{"url": "example.com"}'
 | `PATCH` / `DELETE /api/monitors/:id` | Change (`paused`, `schedule`, `alerts`) or remove a monitor |
 | `POST /api/monitors/:id/run`         | Runs a monitor now, streamed like audits                    |
 | `POST /api/alerts/test`              | Sends a test alert to every channel                         |
+| `POST /api/mcp`                      | The MCP server (see below)                                  |
 
 With `ADMIN_PASSWORD` set, everything except `POST /api/audit`, `GET /api/preview`,
 `GET /api/reports/:id` and `GET /api/compare` needs basic auth. The audit and Share preview pages,
@@ -342,6 +345,55 @@ Its outputs are `passed`, `score`, `grade`, `baseline-score`, `score-change`, `n
 `fixed` and `results`, the path of a JSON file with every report, ready for
 `actions/upload-artifact`. Outside GitHub, `pnpm check` takes the same settings as flags and
 exits with 1 when the check fails; `pnpm check --help` lists them.
+
+## MCP server
+
+OpenSEO is an [MCP](https://modelcontextprotocol.io) server, so AI tools like Claude and Cursor can
+use it: "audit our pricing page and fix what it finds", "compare our home page with
+competitor.com", "why did the score drop since last week?". It's built in at `/api/mcp`:
+
+| Client         | Set up                                                                                                            |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Claude Code    | `claude mcp add --transport http openseo http://localhost:3000/api/mcp`                                           |
+| Cursor         | In `.cursor/mcp.json`: `{ "mcpServers": { "openseo": { "url": "http://localhost:3000/api/mcp" } } }`              |
+| VS Code        | In `.vscode/mcp.json`: `{ "servers": { "openseo": { "type": "http", "url": "http://localhost:3000/api/mcp" } } }` |
+| Claude Desktop | The stdio bridge below                                                                                            |
+
+Claude Desktop starts its servers as programs, so it talks to OpenSEO through a small bridge that
+ships in the Docker image. Add this to `claude_desktop_config.json` (Settings → Developer → Edit
+Config):
+
+```json
+{
+	"mcpServers": {
+		"openseo": {
+			"command": "docker",
+			"args": ["exec", "-i", "openseo", "node", "mcp-stdio.mjs"]
+		}
+	}
+}
+```
+
+Without Docker, use `"command": "node"` and `"args": ["/path/to/openseo/scripts/mcp-stdio.mjs"]`
+while OpenSEO runs; `OPENSEO_URL` points it elsewhere.
+
+| Tool                   | Does                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| `audit_page`           | Audits a page and returns the grades and what to fix first                     |
+| `get_report`           | A saved report's problems, or every check, with the evidence and how to fix it |
+| `list_reports`         | Saved audits, newest first, for one site or all                                |
+| `compare_reports`      | What changed between two audits, check by check                                |
+| `crawl_site`           | Crawls a site and lists its issues with example pages                          |
+| `get_crawl`            | A saved crawl, or every page with one issue                                    |
+| `check_share_previews` | How a link looks on Google, Facebook, X, LinkedIn, Slack and more              |
+| `list_monitors`        | Monitors, when they run next and how the last run went                         |
+| `add_monitor`          | Audits a page every day or week, with alerts                                   |
+
+With `ADMIN_PASSWORD` set, clients sign in with basic auth: add
+`--header "Authorization: Basic $(printf 'admin:your-password' | base64)"` to the Claude Code
+command, or a `headers` entry with the same value in Cursor and VS Code. The bridge in the Docker
+image signs in by itself, and outside it takes `OPENSEO_PASSWORD`. Like the rest of the API, MCP
+audits count towards `OPENSEO_RATE_LIMIT`.
 
 ## Your data
 

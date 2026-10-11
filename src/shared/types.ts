@@ -90,7 +90,7 @@ export interface AuditOverview {
 }
 
 /** Where an audit was started. Only older reports have 'embed'. */
-export type ReportSource = 'web' | 'embed' | 'api' | 'cli' | 'monitor'
+export type ReportSource = 'web' | 'embed' | 'api' | 'cli' | 'monitor' | 'mcp'
 
 export interface AuditReport {
 	id: string

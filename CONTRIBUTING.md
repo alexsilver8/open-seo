@@ -202,7 +202,7 @@ the next version and become the changelog. Titles follow
 
 Start the summary with a lowercase letter; the check rejects titles that don't. The scope is
 optional; use the area you touched (`audit`, `checks`, `crawler`, `report`, `compare`,
-`monitors`, `action`, `share`, `settings`, `api`, `ci`). Add `!` after the type or scope for a breaking change
+`monitors`, `action`, `mcp`, `share`, `settings`, `api`, `ci`). Add `!` after the type or scope for a breaking change
 (`feat(api)!: …`).
 
 ## Releasing
