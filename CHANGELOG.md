@@ -4,13 +4,44 @@ All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://se
 
 ## [0.3.0](https://github.com/alexsilver8/openseo/compare/v0.2.0...v0.3.0) (2026-10-11)
 
+### Compare two audits
 
-### Features
+- Put two audits side by side: the same page before and after a change, or your page next to a
+  competitor's. See both grades, the change in score, each category, speed and size, and every
+  check grouped by how it changed: new problems, got worse, fixed, improved and still to fix.
+- Pick two audits under Compare in the sidebar, or audit a competitor's page on the spot. Reports
+  have a Compare button, and each site in History has Compare last two.
+- Each comparison has a shareable page, white-labelled like reports, with Save PDF. The same data
+  comes from `GET /api/compare?a=<id>&b=<id>`.
 
-* add a github action that checks preview deploys ([#16](https://github.com/alexsilver8/openseo/issues/16)) ([4815651](https://github.com/alexsilver8/openseo/commit/48156511bed45fef90ae5a8e28657d42c48c211a))
-* add an mcp server ([#17](https://github.com/alexsilver8/openseo/issues/17)) ([a88a1ec](https://github.com/alexsilver8/openseo/commit/a88a1ec41c914c74a2a62ac83167c3ce8b8ffa75))
-* compare two audits ([#14](https://github.com/alexsilver8/openseo/issues/14)) ([8d98ba1](https://github.com/alexsilver8/openseo/commit/8d98ba170185905e30cdaefbaa62b189a5510f36))
-* monitor pages and send alerts ([#15](https://github.com/alexsilver8/openseo/issues/15)) ([b947508](https://github.com/alexsilver8/openseo/commit/b947508d423f578822b4e58d44e778275291849d))
+### Monitors and alerts
+
+- Re-audit a page every day or every week, at an hour in your time zone. Every run is a normal
+  audit in History.
+- Get an alert when the score drops (by 5 points by default, naming the checks that started
+  failing and linking to the comparison), when the page stops loading and when it's back, and
+  when its SSL certificate is invalid or about to expire (14 days by default).
+- Alerts go by email (set `SMTP_URL` and `SMTP_FROM`), Slack, Discord or a JSON webhook, set up
+  under Settings → Alerts, with a button that sends a test alert. Each piece of news is sent once.
+- The scheduler starts with OpenSEO and catches up on runs it missed while it was off;
+  `OPENSEO_SCHEDULER=false` turns it off. API: `/api/monitors` and `POST /api/alerts/test`.
+
+### GitHub Action
+
+- `uses: alexsilver8/openseo@v0` audits each preview deploy next to production and fails the pull
+  request when a page drops more than 2 points, a check starts failing, or the page doesn't load.
+- The results go to the job summary and to a pull request comment that later runs update. It
+  works with Vercel and Netlify previews, and leaves out what preview hosts change on purpose:
+  the `X-Robots-Tag: noindex` header, canonical tags and email records. Timings never fail it.
+- `pnpm check` does the same in any other CI.
+
+### MCP server
+
+- Claude, Cursor, VS Code and other AI tools can use OpenSEO through its MCP server at `/api/mcp`:
+  run audits, read and compare reports, crawl sites, check share previews and add monitors.
+- Claude Desktop connects through a bridge in the Docker image:
+  `docker exec -i openseo node mcp-stdio.mjs`. With `ADMIN_PASSWORD` set, MCP asks for it like
+  the rest of the admin API.
 
 ## [0.2.0](https://github.com/alexsilver8/openseo/releases/tag/v0.2.0) (2026-10-10)
 
