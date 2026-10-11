@@ -1,6 +1,8 @@
+import { processWide } from './process-wide'
+
 const HOUR = 60 * 60 * 1000
 
-const hits = new Map<string, number[]>()
+const hits = processWide('rate-limits', () => new Map<string, number[]>())
 
 /** Audits allowed per visitor per hour on public endpoints. 0 turns the limit off. */
 function perHour(): number {
@@ -37,8 +39,8 @@ export function takeRateLimit(key: string): boolean {
 	return true
 }
 
-let running = 0
-const waiting: (() => void)[] = []
+/** Heavy work running now, and the work waiting for a turn. */
+const slots = processWide('work-slots', () => ({ running: 0, waiting: [] as (() => void)[] }))
 
 function maxConcurrent(): number {
 	const value = Number(process.env.OPENSEO_MAX_CONCURRENT ?? 4)
@@ -48,14 +50,14 @@ function maxConcurrent(): number {
 
 /** Runs heavy work (audits, crawls) a few at a time; the rest wait their turn. */
 export async function withSlot<T>(work: () => Promise<T>): Promise<T> {
-	if (running >= maxConcurrent()) {
-		await new Promise<void>((resolve) => waiting.push(resolve))
+	if (slots.running >= maxConcurrent()) {
+		await new Promise<void>((resolve) => slots.waiting.push(resolve))
 	}
-	running++
+	slots.running++
 	try {
 		return await work()
 	} finally {
-		running--
-		waiting.shift()?.()
+		slots.running--
+		slots.waiting.shift()?.()
 	}
 }

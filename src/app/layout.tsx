@@ -15,6 +15,7 @@ import '@web/styles/report.css'
 import '@web/styles/screens.css'
 import '@web/styles/share.css'
 import '@web/styles/compare.css'
+import '@web/styles/monitors.css'
 import '@web/styles/print.css'
 
 export const dynamic = 'force-dynamic'

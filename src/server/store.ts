@@ -1,8 +1,10 @@
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import type { Monitor } from '@shared/monitors'
 import { DEFAULT_SETTINGS, mergeSettings, type Settings } from '@shared/settings'
 import type { AuditReport, CrawlReport, CrawlSummary, ReportSummary } from '@shared/types'
+import { processWide } from './process-wide'
 
 /**
  * Everything OpenSEO keeps, as plain JSON files:
@@ -11,6 +13,7 @@ import type { AuditReport, CrawlReport, CrawlSummary, ReportSummary } from '@sha
  *   <dir>/reports.json        the history index, newest first
  *   <dir>/crawls/<id>.json    one crawl each
  *   <dir>/crawls.json         the crawl index, newest first
+ *   <dir>/monitors.json       scheduled audits and their recent runs
  *   <dir>/settings.json       branding and options
  *
  * Set OPENSEO_DATA_DIR to keep them somewhere else.
@@ -23,7 +26,7 @@ export const DATA_DIR = resolve(
 const ID = /^[A-Za-z0-9_-]{6,40}$/
 
 /** Writes to one file happen one at a time, so concurrent audits can't lose index entries. */
-const locks = new Map<string, Promise<unknown>>()
+const locks = processWide('file-locks', () => new Map<string, Promise<unknown>>())
 
 function withLock<T>(file: string, work: () => Promise<T>): Promise<T> {
 	const previous = locks.get(file) ?? Promise.resolve()
@@ -67,6 +70,7 @@ export function isValidId(id: string): boolean {
 
 const reportsIndex = join(DATA_DIR, 'reports.json')
 const crawlsIndex = join(DATA_DIR, 'crawls.json')
+const monitorsFile = join(DATA_DIR, 'monitors.json')
 const settingsFile = join(DATA_DIR, 'settings.json')
 
 export async function saveReport(report: AuditReport): Promise<void> {
@@ -140,6 +144,53 @@ export async function deleteCrawl(id: string): Promise<boolean> {
 		found = list.some((c) => c.id === id)
 
 		return list.filter((c) => c.id !== id)
+	})
+
+	return found
+}
+
+/** Every monitor, newest first. */
+export function listMonitors(): Promise<Monitor[]> {
+	return readJson<Monitor[]>(monitorsFile, [])
+}
+
+export async function getMonitor(id: string): Promise<Monitor | null> {
+	if (!isValidId(id)) return null
+
+	return (await listMonitors()).find((m) => m.id === id) ?? null
+}
+
+export async function addMonitor(monitor: Monitor): Promise<void> {
+	await updateJson<Monitor[]>(monitorsFile, [], (list) => [monitor, ...list])
+}
+
+/**
+ * Changes one monitor in place, under the file's lock, so a run finishing while someone edits
+ * the schedule keeps both changes. Returns the result, or null when the monitor is gone.
+ */
+export async function updateMonitor(
+	id: string,
+	change: (monitor: Monitor) => Monitor
+): Promise<Monitor | null> {
+	let updated: Monitor | null = null
+	await updateJson<Monitor[]>(monitorsFile, [], (list) =>
+		list.map((monitor) => {
+			if (monitor.id !== id) return monitor
+			updated = change(monitor)
+
+			return updated
+		})
+	)
+
+	return updated
+}
+
+export async function deleteMonitor(id: string): Promise<boolean> {
+	let found = false
+	await updateJson<Monitor[]>(monitorsFile, [], (list) => {
+		found = list.some((m) => m.id === id)
+
+		return list.filter((m) => m.id !== id)
 	})
 
 	return found

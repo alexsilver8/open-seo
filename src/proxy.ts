@@ -16,10 +16,23 @@ function isPublic(request: NextRequest): boolean {
 }
 
 /**
+ * Endpoints that act for the admin. A page on another site can make a visitor's browser POST plain
+ * text or a form, but not JSON, so these only take JSON.
+ */
+const JSON_ONLY = /^\/api\/(monitors|alerts)(\/|$)/
+
+/**
  * With ADMIN_PASSWORD set, history, crawls and settings ask for a password (user "admin").
  * Without it everything is open, which is fine on your own computer.
  */
 export function proxy(request: NextRequest): NextResponse {
+	const json = request.headers.get('content-type')?.includes('application/json')
+	if (request.method === 'POST' && JSON_ONLY.test(request.nextUrl.pathname) && !json) {
+		return NextResponse.json(
+			{ error: 'Send JSON, with Content-Type: application/json.' },
+			{ status: 415 }
+		)
+	}
 	const password = process.env.ADMIN_PASSWORD
 	if (!password || isPublic(request)) return NextResponse.next()
 	const header = request.headers.get('authorization') ?? ''

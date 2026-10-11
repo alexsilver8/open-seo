@@ -20,12 +20,31 @@ export interface Settings {
 	pagespeedApiKey: string
 	brokenLinkLimit: number
 	crawlPageLimit: number
+	/** Who gets monitor alerts by email. Sending needs SMTP_URL. */
+	alertEmails: string[]
+	/** A Slack incoming webhook for alerts. Never sent back to the browser. */
+	slackWebhookUrl: string
+	/** A Discord channel webhook for alerts. Never sent back to the browser. */
+	discordWebhookUrl: string
+	/** Any address that should get each alert as JSON. Never sent back to the browser. */
+	webhookUrl: string
+	/** The address people open OpenSEO at, so links in alerts work. */
+	appUrl: string
 }
 
-/** Settings as the browser sees them: the API key is replaced by whether one is set. */
-export type PublicSettings = Omit<Settings, 'pagespeedApiKey'> & {
+/** Settings that are secrets: saved, but never sent back to the browser. */
+export type SecretSetting =
+	'pagespeedApiKey' | 'slackWebhookUrl' | 'discordWebhookUrl' | 'webhookUrl'
+
+/** Settings as the browser sees them: each secret is replaced by whether it's set. */
+export type PublicSettings = Omit<Settings, SecretSetting> & {
 	hasPagespeedKey: boolean
 	pagespeedKeyFromEnv: boolean
+	hasSlackWebhook: boolean
+	hasDiscordWebhook: boolean
+	hasWebhook: boolean
+	/** SMTP_URL is set, so alert emails can go out. */
+	emailReady: boolean
 }
 
 export const DEFAULT_BRAND_COLOR = '#c8f135'
@@ -43,7 +62,44 @@ export const DEFAULT_SETTINGS: Settings = {
 	pagespeedEnabled: false,
 	pagespeedApiKey: '',
 	brokenLinkLimit: 40,
-	crawlPageLimit: 100
+	crawlPageLimit: 100,
+	alertEmails: [],
+	slackWebhookUrl: '',
+	discordWebhookUrl: '',
+	webhookUrl: '',
+	appUrl: ''
+}
+
+/** What each webhook address must look like, and what to say when it doesn't. */
+export const WEBHOOK_FORMATS: Record<
+	Exclude<SecretSetting, 'pagespeedApiKey'>,
+	{ pattern: RegExp; hint: string }
+> = {
+	slackWebhookUrl: {
+		pattern: /^https:\/\/hooks\.slack\.com\/(services|triggers|workflows)\/\S+$/,
+		hint: 'A Slack webhook address starts with https://hooks.slack.com/.'
+	},
+	discordWebhookUrl: {
+		pattern:
+			/^https:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/(v\d+\/)?webhooks\/\d+\/[\w-]+$/,
+		hint: 'A Discord webhook address starts with https://discord.com/api/webhooks/.'
+	},
+	webhookUrl: {
+		pattern: /^https?:\/\/\S+$/,
+		hint: 'Enter a full address starting with https://.'
+	}
+}
+
+const EMAIL = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/
+
+/** Splits typed addresses ("a@x.com, b@y.com") into valid ones and the rest. */
+export function parseEmails(text: string): { emails: string[]; invalid: string[] } {
+	const parts = text.split(/[\s,;]+/).filter(Boolean)
+
+	return {
+		emails: [...new Set(parts.filter((p) => EMAIL.test(p)).map((p) => p.toLowerCase()))],
+		invalid: parts.filter((p) => !EMAIL.test(p))
+	}
 }
 
 export const BROKEN_LINK_OPTIONS = [
@@ -93,6 +149,34 @@ function link(value: unknown, fallback: string): string {
 		: fallback
 }
 
+function emails(value: unknown, fallback: string[]): string[] {
+	if (!Array.isArray(value) || !value.every((v) => typeof v === 'string' && EMAIL.test(v.trim())))
+		return fallback
+
+	return [...new Set(value.map((v: string) => v.trim().toLowerCase()))].slice(0, 20)
+}
+
+function webhook(value: unknown, fallback: string, pattern: RegExp): string {
+	if (typeof value !== 'string') return fallback
+	const trimmed = value.trim()
+
+	return trimmed === '' || (trimmed.length <= 500 && pattern.test(trimmed)) ? trimmed : fallback
+}
+
+/** A web address without a trailing slash, or empty. */
+function origin(value: unknown, fallback: string): string {
+	if (typeof value !== 'string') return fallback
+	const trimmed = value.trim().replace(/\/+$/, '')
+	if (!trimmed) return ''
+	try {
+		const url = new URL(trimmed)
+
+		return /^https?:$/.test(url.protocol) && trimmed.length <= 300 ? trimmed : fallback
+	} catch {
+		return fallback
+	}
+}
+
 function logo(value: unknown, fallback: string): string {
 	if (typeof value !== 'string') return fallback
 	const trimmed = value.trim()
@@ -121,7 +205,20 @@ export function mergeSettings(base: Settings, input: unknown): Settings {
 		pagespeedEnabled: bool(patch.pagespeedEnabled, base.pagespeedEnabled),
 		pagespeedApiKey: text(patch.pagespeedApiKey, base.pagespeedApiKey, 200),
 		brokenLinkLimit: count(patch.brokenLinkLimit, base.brokenLinkLimit, 200),
-		crawlPageLimit: Math.max(1, count(patch.crawlPageLimit, base.crawlPageLimit, 500))
+		crawlPageLimit: Math.max(1, count(patch.crawlPageLimit, base.crawlPageLimit, 500)),
+		alertEmails: emails(patch.alertEmails, base.alertEmails),
+		slackWebhookUrl: webhook(
+			patch.slackWebhookUrl,
+			base.slackWebhookUrl,
+			WEBHOOK_FORMATS.slackWebhookUrl.pattern
+		),
+		discordWebhookUrl: webhook(
+			patch.discordWebhookUrl,
+			base.discordWebhookUrl,
+			WEBHOOK_FORMATS.discordWebhookUrl.pattern
+		),
+		webhookUrl: webhook(patch.webhookUrl, base.webhookUrl, WEBHOOK_FORMATS.webhookUrl.pattern),
+		appUrl: origin(patch.appUrl, base.appUrl)
 	}
 }
 

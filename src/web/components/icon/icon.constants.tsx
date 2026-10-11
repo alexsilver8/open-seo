@@ -139,5 +139,13 @@ export const PATHS = {
 		</>
 	),
 	menu: <path d="M3.5 6h13M3.5 10h13M3.5 14h13" />,
+	bell: (
+		<>
+			<path d="M5.25 13.75V9.5a4.75 4.75 0 0 1 9.5 0v4.25l1.5 1.75H3.75Z" />
+			<path d="M8.5 17.75h3" />
+		</>
+	),
+	play: <path d="M7 5.25v9.5L14.75 10Z" />,
+	pause: <path d="M7.5 5.5v9M12.5 5.5v9" strokeWidth={2} />,
 	sparkline: <path d="M3 14.5 7 9.5l3 3 3-6 4 4.5" />
 }

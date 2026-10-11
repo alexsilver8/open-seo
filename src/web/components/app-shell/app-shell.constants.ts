@@ -12,7 +12,10 @@ export const NAV: NavGroup[] = [
 	},
 	{
 		title: 'Site',
-		items: [{ href: '/crawls', label: 'Crawler', icon: 'crawl' }]
+		items: [
+			{ href: '/crawls', label: 'Crawler', icon: 'crawl' },
+			{ href: '/monitors', label: 'Monitors', icon: 'bell' }
+		]
 	},
 	{
 		title: 'Workspace',
