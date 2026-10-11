@@ -118,6 +118,11 @@ describe('compareReports', () => {
 		expect(comparison.scoreChange).toBe(after.score - before.score)
 	})
 
+	it('keeps the order given when asked to', () => {
+		const comparison = compareReports(after, before, { inTimeOrder: false })
+		expect([comparison.a.id, comparison.b.id]).toEqual([after.id, before.id])
+	})
+
 	it('classifies every check, the most important first', () => {
 		const { checks } = compareReports(before, after)
 		const kinds = Object.fromEntries(checks.map((c) => [c.id, c.kind]))

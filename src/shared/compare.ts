@@ -169,12 +169,20 @@ function shortUrl(url: string): string {
 
 /**
  * Compares two audits check by check. Two audits of the same page are put in time order, so A
- * is "before" and B "after"; two different pages keep the order given (yours, then theirs).
+ * is "before" and B "after", unless `inTimeOrder` is false; two different pages keep the order
+ * given (yours, then theirs).
  */
-export function compareReports(first: AuditReport, second: AuditReport): ReportComparison {
+export function compareReports(
+	first: AuditReport,
+	second: AuditReport,
+	options: { inTimeOrder?: boolean } = {}
+): ReportComparison {
+	const { inTimeOrder = true } = options
 	const samePage = pageKey(first.finalUrl) === pageKey(second.finalUrl)
 	const [a, b] =
-		samePage && first.createdAt > second.createdAt ? [second, first] : [first, second]
+		samePage && inTimeOrder && first.createdAt > second.createdAt
+			? [second, first]
+			: [first, second]
 	const labels = samePage
 		? ['Before', 'After']
 		: a.domain === b.domain

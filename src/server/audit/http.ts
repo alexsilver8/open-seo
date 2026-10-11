@@ -88,6 +88,18 @@ export function isPrivateIp(ip: string): boolean {
 
 const hostChecks = new Map<string, Promise<void>>()
 
+/** Headers sent with every request to one host. Set by `pnpm check`; empty in the app. */
+const hostHeaders = new Map<string, Record<string, string>>()
+
+/**
+ * Sends extra headers with every request to `host`, like the token that lets automation past a
+ * protected preview deploy. Only that host gets them, so a secret never leaks to other sites.
+ * The setting is global to the process, which suits the CLI but not the app.
+ */
+export function setHostHeaders(host: string, headers: Record<string, string>): void {
+	hostHeaders.set(host.toLowerCase(), headers)
+}
+
 /**
  * Refuses hosts that resolve to private addresses, so a public OpenSEO can't be used to reach
  * the network it runs in. Set OPENSEO_ALLOW_PRIVATE=true to audit local sites.
@@ -211,7 +223,8 @@ export async function safeFetch(
 					'user-agent': USER_AGENT,
 					accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 					'accept-language': 'en-US,en;q=0.9',
-					...headers
+					...headers,
+					...hostHeaders.get(url.hostname.toLowerCase())
 				}
 			})
 			const ttfb = performance.now() - hopStart

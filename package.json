@@ -32,7 +32,8 @@
 		"cleaner": "node scripts/cleaner.mjs",
 		"lint": "node scripts/cleaner.mjs",
 		"scan": "tsx scripts/scan.ts",
-		"crawl": "tsx scripts/crawl.ts"
+		"crawl": "tsx scripts/crawl.ts",
+		"check": "tsx scripts/check.ts"
 	},
 	"engines": {
 		"node": ">=22.12"

@@ -41,7 +41,8 @@ affiliated with any of them.
 - **Exports** reports as PDF (print-ready) and JSON, and crawls as CSV.
 - **White-label reports**: your name, logo, accent color, footer and a call to action button,
   set in `data/settings.json`.
-- **Has an API and a CLI** for scripts and CI.
+- **Has an API, a CLI and a GitHub Action** that fails a pull request when its preview deploy
+  scores lower than production or breaks a check.
 - **Checks AI search readiness**: whether ChatGPT, Claude and Perplexity can crawl and quote the
   page, llms.txt, server-rendered content and entity markup.
 - **Shows how your links look when shared** on Google, Facebook, X, LinkedIn, Slack, Discord,
@@ -257,7 +258,90 @@ pnpm scan example.com              # grades and what to fix
 pnpm scan example.com --all        # every check
 pnpm scan example.com --json       # the full report
 pnpm crawl example.com --pages 200 # crawl up to 200 pages
+pnpm check preview.example.com --baseline example.com  # what the GitHub Action runs
 ```
+
+## GitHub Action
+
+Audit every preview deploy and fail the pull request when its SEO gets worse. With Vercel,
+Netlify or any host that reports deploys back to GitHub, add `.github/workflows/seo.yml`:
+
+```yaml
+name: SEO
+on: deployment_status
+
+jobs:
+    openseo:
+        if: github.event.deployment_status.state == 'success' && github.event.deployment.environment != 'Production'
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        steps:
+            - uses: alexsilver8/openseo@v0
+              with:
+                  url: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+                  baseline-url: https://www.example.com
+                  paths: |
+                      /
+                      /pricing
+```
+
+It audits each path on the preview and in production at the same time, and fails when a page:
+
+- scores more than `max-score-drop` points (2) below production,
+- fails a check that passes in production (`fail-on: warn` also counts checks that start needing
+  work),
+- scores below `min-score`, or doesn't load.
+
+The results go to the run's summary and to a comment on the pull request, which later runs
+update. `@v0` follows the latest release; pin a release like `@v0.3.0` or a commit to stay put.
+
+Previews differ from production in ways that aren't the code's doing, so when the baseline is on
+another host OpenSEO leaves out the `X-Robots-Tag: noindex` header preview hosts add, canonical
+tags (they point at production) and the domain's email records. Timings (server response,
+download time and Core Web Vitals) vary between runs, so the check leaves them out too. Leave out
+other checks with `ignore-checks`, like `robots-txt, ai-crawlers` if your previews block crawlers
+on purpose.
+
+Vercel asks for a login on previews by default. Create a
+[Protection Bypass for Automation](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation)
+secret, add it to the repository's secrets and pass it on. It's only sent to the preview's host:
+
+```yaml
+headers: |
+    x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+```
+
+Without preview deploys, start the site in the job and hold it to a minimum score instead:
+
+```yaml
+- run: npm ci && npm run build && (npm start &) && npx wait-on http://localhost:3000
+- uses: alexsilver8/openseo@v0
+  with:
+      url: http://localhost:3000
+      allow-private: true
+      min-score: 80
+```
+
+| Input               | Default | Does                                                                                      |
+| ------------------- | ------: | ----------------------------------------------------------------------------------------- |
+| `url`               |         | The page to audit, usually the preview deploy                                             |
+| `baseline-url`      |         | The page to compare with, usually production. Without it, only `min-score` applies        |
+| `paths`             |         | Paths to audit on both sites, one per line. Without it, the two URLs are audited as given |
+| `max-score-drop`    |     `2` | The most points a page may drop below the baseline                                        |
+| `min-score`         |     `0` | The lowest score a page may have                                                          |
+| `fail-on`           |  `fail` | `fail`: checks that start failing. `warn`: checks that get any worse. `none`: neither     |
+| `ignore-checks`     |         | Check IDs to leave out, separated by commas                                               |
+| `preview`           |  `auto` | Forgive what preview hosts change. `auto` does when the URLs are on different hosts       |
+| `headers`           |         | `Name: value` lines sent to the preview's host only                                       |
+| `comment`           |  `true` | Comment on the pull request. Needs `pull-requests: write`                                 |
+| `pagespeed-api-key` |         | Adds Core Web Vitals from PageSpeed Insights, about 20 seconds per page                   |
+| `allow-private`     | `false` | Allows localhost and private addresses, for a server started in the job                   |
+
+Its outputs are `passed`, `score`, `grade`, `baseline-score`, `score-change`, `new-problems`,
+`fixed` and `results`, the path of a JSON file with every report, ready for
+`actions/upload-artifact`. Outside GitHub, `pnpm check` takes the same settings as flags and
+exits with 1 when the check fails; `pnpm check --help` lists them.
 
 ## Your data
 

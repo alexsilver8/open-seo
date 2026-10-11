@@ -81,6 +81,26 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  # Point the major version tag (v0) at each release, so workflows using
+  # `alexsilver8/openseo@v0` get the latest GitHub Action without changing anything.
+  action-tag:
+    name: action-tag
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Move the major version tag
+        env:
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          major="${TAG%%.*}"
+          git fetch --depth=1 origin "refs/tags/$TAG:refs/tags/$TAG"
+          git tag -f "$major" "$TAG^{commit}"
+          git push -f origin "refs/tags/$major"
+
   # Publish to npm whenever a release is cut. First set up npm trusted publishing
   # (https://docs.npmjs.com/trusted-publishers) for this repo, then uncomment.
   # publish:

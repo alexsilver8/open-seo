@@ -16,6 +16,7 @@ pnpm dev
 `OPENSEO_ALLOW_PRIVATE=true` to audit a site running on your own machine.
 
 To try the engine without the UI, `pnpm scan example.com --all` prints every check.
+`pnpm check <url> --baseline <url>` runs what the GitHub Action (`action.yml`) runs.
 
 ## Before opening a pull request
 
@@ -201,7 +202,7 @@ the next version and become the changelog. Titles follow
 
 Start the summary with a lowercase letter; the check rejects titles that don't. The scope is
 optional; use the area you touched (`audit`, `checks`, `crawler`, `report`, `compare`,
-`monitors`, `share`, `settings`, `api`, `ci`). Add `!` after the type or scope for a breaking change
+`monitors`, `action`, `share`, `settings`, `api`, `ci`). Add `!` after the type or scope for a breaking change
 (`feat(api)!: …`).
 
 ## Releasing
