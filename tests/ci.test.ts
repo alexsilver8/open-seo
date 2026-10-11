@@ -297,6 +297,20 @@ describe('toMarkdown', () => {
 		)
 	})
 
+	it('keeps backslashes and pipes from breaking the tables', () => {
+		const odd = report(PREVIEW, [
+			check('title', 'fail', { summary: 'Starts with C:\\temp|draft' }),
+			check('h1', 'pass')
+		])
+		const page = judgePage(
+			{ label: '/a|b', url: PREVIEW, report: odd, baselineReport: production },
+			gate
+		)
+		const markdown = toMarkdown({ ...results, pages: [page], failures: page.failures }, '0.3.0')
+		expect(markdown).toContain('Starts with C:\\\\temp\\|draft')
+		expect(markdown).toContain('| ✖ | /a\\|b |')
+	})
+
 	it('marks the comment by the site it checks', () => {
 		expect(commentMarker('fernhill.coffee')).toBe('<!-- openseo-check fernhill.coffee -->')
 	})

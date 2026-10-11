@@ -18,6 +18,7 @@ export function commentMarker(key: string): string {
 /** Text that can sit in a Markdown table cell without turning into HTML or breaking the row. */
 function escape(text: string): string {
 	return text
+		.replace(/\\/g, '\\\\')
 		.replace(/&/g, '&amp;')
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;')
@@ -25,8 +26,9 @@ function escape(text: string): string {
 		.replace(/\s+/g, ' ')
 }
 
+/** A path or address as code, unless it holds a backtick or a pipe, which a code span in a table can't show. */
 function code(text: string): string {
-	return text.includes('`') ? escape(text) : `\`${text}\``
+	return /[`|]/.test(text) ? escape(text) : `\`${text}\``
 }
 
 function scoreCell(report?: AuditReport, error?: string): string {
