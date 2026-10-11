@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import type { AuditProgressProps } from './audit-progress.types'
+import type { AuditProgressViewProps } from './audit-progress-view.types'
 
 /** What the audit or crawl is doing right now, with a progress bar. */
-const AuditProgressView = (props: AuditProgressProps) => {
+const AuditProgressView = (props: AuditProgressViewProps) => {
 	const { progress } = props
 
 	return (
