@@ -133,7 +133,7 @@ export function toMarkdown(results: CheckResults, version: string): string {
 	].filter(Boolean)
 	lines.push(
 		'',
-		`<sub>${notes.join(' ')} Checked with [OpenSEO](https://github.com/alexsilver8/openseo) ${version}.</sub>`
+		`<sub>${notes.join(' ')} Checked with [OpenSEO](https://github.com/alexsilver8/open-seo) ${version}.</sub>`
 	)
 	const markdown = lines.join('\n')
 

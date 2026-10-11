@@ -215,7 +215,7 @@ const SettingsScreen = (props: SettingsScreenProps) => {
 				>
 					<a
 						className="button"
-						href="https://github.com/alexsilver8/openseo"
+						href="https://github.com/alexsilver8/open-seo"
 						target="_blank"
 						rel="noreferrer"
 					>

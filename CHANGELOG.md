@@ -2,7 +2,7 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
-## [0.3.0](https://github.com/alexsilver8/openseo/compare/v0.2.0...v0.3.0) (2026-10-11)
+## [0.3.0](https://github.com/alexsilver8/open-seo/compare/v0.2.0...v0.3.0) (2026-10-11)
 
 ### Compare two audits
 
@@ -28,7 +28,7 @@ All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://se
 
 ### GitHub Action
 
-- `uses: alexsilver8/openseo@v0` audits each preview deploy next to production and fails the pull
+- `uses: alexsilver8/open-seo@v0` audits each preview deploy next to production and fails the pull
   request when a page drops more than 2 points, a check starts failing, or the page doesn't load.
 - The results go to the job summary and to a pull request comment that later runs update. It
   works with Vercel and Netlify previews, and leaves out what preview hosts change on purpose:
@@ -43,7 +43,7 @@ All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://se
   `docker exec -i openseo node mcp-stdio.mjs`. With `ADMIN_PASSWORD` set, MCP asks for it like
   the rest of the admin API.
 
-## [0.2.0](https://github.com/alexsilver8/openseo/releases/tag/v0.2.0) (2026-10-10)
+## [0.2.0](https://github.com/alexsilver8/open-seo/releases/tag/v0.2.0) (2026-10-10)
 
 ### Share previews
 
@@ -59,9 +59,9 @@ All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://se
 
 ### Run it with one command
 
-- A Docker image for Intel and ARM is published to `ghcr.io/alexsilver8/openseo` with every
+- A Docker image for Intel and ARM is published to `ghcr.io/alexsilver8/open-seo` with every
   release:
-  `docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo`
+  `docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/open-seo`
 - Fixed the Dockerfile, which copied a `public` folder that no longer exists and broke the build.
 - `docker compose` passes every option from `.env` and can reach sites on your own computer.
 

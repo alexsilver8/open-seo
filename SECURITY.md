@@ -8,7 +8,7 @@ Only the latest release receives security fixes.
 
 **Please do not report security vulnerabilities through public issues, discussions, or pull requests.**
 
-Report them privately through [GitHub Security Advisories](https://github.com/alexsilver8/openseo/security/advisories/new). Include as much detail as you can:
+Report them privately through [GitHub Security Advisories](https://github.com/alexsilver8/open-seo/security/advisories/new). Include as much detail as you can:
 
 - the type of issue and where it lives in the code,
 - steps to reproduce, or a proof of concept,

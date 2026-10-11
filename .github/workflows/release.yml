@@ -82,7 +82,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   # Point the major version tag (v0) at each release, so workflows using
-  # `alexsilver8/openseo@v0` get the latest GitHub Action without changing anything.
+  # `alexsilver8/open-seo@v0` get the latest GitHub Action without changing anything.
   action-tag:
     name: action-tag
     needs: release-please

@@ -8,12 +8,12 @@ AI search readiness, with the fixes ranked by how much they matter.
 
 No paid APIs, no account, no database to set up.
 
-[![ci](https://github.com/alexsilver8/openseo/actions/workflows/ci.yml/badge.svg)](https://github.com/alexsilver8/openseo/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/alexsilver8/openseo)](https://github.com/alexsilver8/openseo/releases)
-[![MIT license](https://img.shields.io/github/license/alexsilver8/openseo)](LICENSE)
+[![ci](https://github.com/alexsilver8/open-seo/actions/workflows/ci.yml/badge.svg)](https://github.com/alexsilver8/open-seo/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/alexsilver8/open-seo)](https://github.com/alexsilver8/open-seo/releases)
+[![MIT license](https://img.shields.io/github/license/alexsilver8/open-seo)](LICENSE)
 
 ```bash
-docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo
+docker run -d --name openseo -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/open-seo
 ```
 
 Then open [http://localhost:3000](http://localhost:3000). [More ways to run it](#run-it).
@@ -77,21 +77,21 @@ All you need is [Docker Desktop](https://www.docker.com/products/docker-desktop/
 Engine on Linux). Start OpenSEO with:
 
 ```bash
-docker run -d --name openseo --restart unless-stopped -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/openseo
+docker run -d --name openseo --restart unless-stopped -p 3000:3000 -v openseo-data:/data ghcr.io/alexsilver8/open-seo
 ```
 
 Open [http://localhost:3000](http://localhost:3000) and paste a URL. OpenSEO keeps running in the
 background and starts again with Docker. Reports, crawls and settings live in the `openseo-data`
 volume, so they survive restarts and updates. The image works on Intel and Apple silicon.
 
-| To                    | Run                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------ |
-| Stop it               | `docker stop openseo`                                                                |
-| Start it again        | `docker start openseo`                                                               |
-| See what it's doing   | `docker logs -f openseo`                                                             |
-| Update to the latest  | `docker pull ghcr.io/alexsilver8/openseo`, then `docker rm -f openseo` and run again |
-| Use another port      | Change `-p 3000:3000` to `-p 8080:3000`                                              |
-| Delete all saved data | `docker rm -f openseo && docker volume rm openseo-data`                              |
+| To                    | Run                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| Stop it               | `docker stop openseo`                                                                 |
+| Start it again        | `docker start openseo`                                                                |
+| See what it's doing   | `docker logs -f openseo`                                                              |
+| Update to the latest  | `docker pull ghcr.io/alexsilver8/open-seo`, then `docker rm -f openseo` and run again |
+| Use another port      | Change `-p 3000:3000` to `-p 8080:3000`                                               |
+| Delete all saved data | `docker rm -f openseo && docker volume rm openseo-data`                               |
 
 To turn on Core Web Vitals, add a free PageSpeed API key under **Settings** in the app. Other
 options from the table below go in with `-e`, like `-e ADMIN_PASSWORD=…`.
@@ -104,8 +104,8 @@ OpenSEO itself).
 ### Build it from source
 
 ```bash
-git clone https://github.com/alexsilver8/openseo.git
-cd openseo
+git clone https://github.com/alexsilver8/open-seo.git
+cd open-seo
 docker compose up -d
 ```
 
@@ -188,7 +188,7 @@ Resend, Postmark, Mailgun or your host:
 docker run -d --name openseo --restart unless-stopped -p 3000:3000 -v openseo-data:/data \
   -e SMTP_URL='smtps://you%40gmail.com:app-password@smtp.gmail.com:465' \
   -e SMTP_FROM='OpenSEO <you@gmail.com>' \
-  ghcr.io/alexsilver8/openseo
+  ghcr.io/alexsilver8/open-seo
 ```
 
 Encode `@` in the user name as `%40`. Use `smtps://` with port 465, or `smtp://` with port 587
@@ -280,7 +280,7 @@ jobs:
         permissions:
             pull-requests: write
         steps:
-            - uses: alexsilver8/openseo@v0
+            - uses: alexsilver8/open-seo@v0
               with:
                   url: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
                   baseline-url: https://www.example.com
@@ -319,7 +319,7 @@ Without preview deploys, start the site in the job and hold it to a minimum scor
 
 ```yaml
 - run: npm ci && npm run build && (npm start &) && npx wait-on http://localhost:3000
-- uses: alexsilver8/openseo@v0
+- uses: alexsilver8/open-seo@v0
   with:
       url: http://localhost:3000
       allow-private: true
@@ -374,7 +374,7 @@ Config):
 }
 ```
 
-Without Docker, use `"command": "node"` and `"args": ["/path/to/openseo/scripts/mcp-stdio.mjs"]`
+Without Docker, use `"command": "node"` and `"args": ["/path/to/open-seo/scripts/mcp-stdio.mjs"]`
 while OpenSEO runs; `OPENSEO_URL` points it elsewhere.
 
 | Tool                   | Does                                                                           |

@@ -293,7 +293,7 @@ describe('toMarkdown', () => {
 		expect(markdown).toContain('- ✖ **title** (On-page SEO): The page has no &lt;title&gt;.')
 		expect(markdown).toContain('<details><summary>Every change on / (1)</summary>')
 		expect(markdown).toContain(
-			'Checked with [OpenSEO](https://github.com/alexsilver8/openseo) 0.3.0.'
+			'Checked with [OpenSEO](https://github.com/alexsilver8/open-seo) 0.3.0.'
 		)
 	})
 

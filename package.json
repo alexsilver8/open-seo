@@ -1,15 +1,15 @@
 {
-	"name": "openseo",
+	"name": "open-seo",
 	"productName": "OpenSEO",
 	"version": "0.3.0",
 	"description": "An open-source SEO audit tool: graded website reports, a site crawler, PDF reports and link previews for every major platform.",
 	"author": "Alexander Silver",
-	"homepage": "https://github.com/alexsilver8/openseo",
+	"homepage": "https://github.com/alexsilver8/open-seo",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alexsilver8/openseo.git"
+		"url": "git+https://github.com/alexsilver8/open-seo.git"
 	},
-	"bugs": "https://github.com/alexsilver8/openseo/issues",
+	"bugs": "https://github.com/alexsilver8/open-seo/issues",
 	"keywords": [
 		"seo",
 		"seo-audit",

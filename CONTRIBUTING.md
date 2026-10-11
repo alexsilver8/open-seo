@@ -211,5 +211,5 @@ Releases are automated with [release-please](https://github.com/googleapis/relea
 reads the Conventional Commit titles merged into `main` and keeps a release pull request open
 that bumps the version in `package.json` and adds the notes to `CHANGELOG.md`; edit the notes in
 that pull request if they need it. Merging it tags the release, publishes a GitHub release and
-pushes the Docker image to `ghcr.io/alexsilver8/openseo` for Intel and ARM, tagged `latest`, the
+pushes the Docker image to `ghcr.io/alexsilver8/open-seo` for Intel and ARM, tagged `latest`, the
 version (`0.2.0`) and the minor line (`0.2`). See `.github/workflows/release.yml`.
