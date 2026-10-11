@@ -21,6 +21,15 @@ export const PATHS = {
 	dash: <path d="M6 10h8" strokeWidth={2} />,
 	arrowRight: <path d="M4 10h12M11 5l5 5-5 5" />,
 	arrowUp: <path d="M10 16V4.5M5 9.5l5-5 5 5" />,
+	arrowDown: <path d="M10 4v11.5M5 10.5l5 5 5-5" />,
+	swap: <path d="M4 7h11.5M12.25 3.75 15.5 7l-3.25 3.25M16 13H4.5M7.75 9.75 4.5 13l3.25 3.25" />,
+	compare: (
+		<>
+			<rect x="2.75" y="5.25" width="5.75" height="9.5" rx="1.5" />
+			<rect x="11.5" y="5.25" width="5.75" height="9.5" rx="1.5" />
+			<path d="M10 3v14" />
+		</>
+	),
 	external: (
 		<path d="M7 13 14 6M8.5 6H14v5.5M14 13.5V15a1.5 1.5 0 0 1-1.5 1.5h-7.5A1.5 1.5 0 0 1 3.5 15V7.5A1.5 1.5 0 0 1 5 6h1.5" />
 	),

@@ -32,6 +32,9 @@ affiliated with any of them.
 - **Crawls a whole site**: follows links page by page and finds broken pages, missing or
   duplicate titles and descriptions, missing H1s, thin content, slow pages and noindex.
 - **Keeps a history** of every audit with shareable links and each site's score over time.
+- **Compares two audits**: the same page before and after a deploy, or your page next to a
+  competitor's, with the score, each category and every check that got better or worse. Each
+  comparison has a shareable link, like a report.
 - **Exports** reports as PDF (print-ready) and JSON, and crawls as CSV.
 - **White-label reports**: your name, logo, accent color, footer and a call to action button,
   set in `data/settings.json`.
@@ -131,7 +134,8 @@ Everything below is optional. With `docker run`, pass them with `-e`; with Compo
 | `OPENSEO_USER_AGENT`     | The User-Agent sent to audited sites                                                               |
 
 You only need `ADMIN_PASSWORD` if other people can reach your OpenSEO, like on a shared network.
-Shared reports, the home page and Share preview stay open; everything else asks for it.
+Shared reports and comparisons, the home page and Share preview stay open; everything else asks
+for it.
 
 The theme (light by default, or dark, or matching the system), PageSpeed, how many links to check
 and how many pages to crawl are in the app under **Settings**.
@@ -158,12 +162,14 @@ curl -N -X POST https://your-openseo/api/audit -d '{"url": "example.com"}'
 | `GET /api/reports/:id`      | One report as JSON (public, like the report page)         |
 | `GET /api/preview?url=`     | Share previews, images, icons and tags for one page       |
 | `GET /api/reports`          | History, newest first. `?domain=example.com` filters it   |
+| `GET /api/compare?a=&b=`    | How report `b` differs from report `a`, check by check    |
 | `POST /api/crawl`           | Crawls a site: `{ url, maxPages? }`, streamed like audits |
 | `GET /api/crawls/:id`       | One crawl as JSON, or `?format=csv`                       |
 | `GET` / `PUT /api/settings` | Read or change settings                                   |
 
-With `ADMIN_PASSWORD` set, everything except `POST /api/audit`, `GET /api/preview` and
-`GET /api/reports/:id` needs basic auth. The audit and Share preview pages stay public too.
+With `ADMIN_PASSWORD` set, everything except `POST /api/audit`, `GET /api/preview`,
+`GET /api/reports/:id` and `GET /api/compare` needs basic auth. The audit and Share preview pages,
+reports and comparisons stay public too.
 
 ## Terminal
 

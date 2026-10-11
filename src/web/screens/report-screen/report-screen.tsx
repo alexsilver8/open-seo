@@ -1,8 +1,8 @@
 import { memo } from 'react'
+import { ReportFooter } from '@web/components/report-footer'
 import { recommendationsOf } from './report-screen.utils'
 import { PriorityList } from './components/priority-list'
 import { ReportChecks } from './components/report-checks'
-import { ReportFooter } from './components/report-footer'
 import { ReportHero } from './components/report-hero'
 import { ReportSidebar } from './components/report-sidebar'
 import { ReportTopBar } from './components/report-top-bar'
@@ -11,7 +11,7 @@ import type { ReportScreenProps } from './report-screen.types'
 
 /** A shareable audit report: grades, what to fix first, then every check by category. */
 const ReportScreen = (props: ReportScreenProps) => {
-	const { report, settings } = props
+	const { report, settings, linkToWorkspace } = props
 
 	const toFix = recommendationsOf(report.checks)
 
@@ -21,6 +21,7 @@ const ReportScreen = (props: ReportScreenProps) => {
 				report={report}
 				brandName={settings.brandName}
 				brandLogo={settings.brandLogo}
+				linkToWorkspace={linkToWorkspace}
 			/>
 			<div className="report-window">
 				<ReportSidebar report={report} />

@@ -1,12 +1,18 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-/** Pages and endpoints anyone may use: the audit and preview tools and shared reports. */
+/**
+ * Pages and endpoints anyone may use: the audit and preview tools, and shared reports and
+ * comparisons (`/report/<id>` and `/report/<id>/compare/<id>`).
+ */
 function isPublic(request: NextRequest): boolean {
 	const { pathname } = request.nextUrl
 	if (['/', '/preview'].includes(pathname) || pathname.startsWith('/report/')) return true
 	if (pathname === '/api/audit' || pathname === '/api/preview') return true
 
-	return request.method === 'GET' && /^\/api\/reports\/[^/]+$/.test(pathname)
+	return (
+		request.method === 'GET' &&
+		(/^\/api\/reports\/[^/]+$/.test(pathname) || pathname === '/api/compare')
+	)
 }
 
 /**

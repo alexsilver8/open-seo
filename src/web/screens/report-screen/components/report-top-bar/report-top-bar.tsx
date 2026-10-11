@@ -11,7 +11,7 @@ import type { ReportTopBarProps } from './report-top-bar.types'
 
 /** The floating bar over a report: brand, the audited site and the report's actions. */
 const ReportTopBar = (props: ReportTopBarProps) => {
-	const { report, brandName, brandLogo } = props
+	const { report, brandName, brandLogo, linkToWorkspace } = props
 
 	const router = useRouter()
 	const [copied, setCopied] = useState(false)
@@ -53,6 +53,16 @@ const ReportTopBar = (props: ReportTopBarProps) => {
 					<Icon name={copied ? 'check' : 'link'} size={15} />
 					<span className="top-bar-label">{copied ? 'Copied' : 'Copy link'}</span>
 				</Button>
+				{linkToWorkspace && (
+					<a
+						className="button button--quiet button--small"
+						href={`/compare?a=${report.id}`}
+						title="Compare with another audit"
+					>
+						<Icon name="compare" size={15} />
+						<span className="top-bar-label">Compare</span>
+					</a>
+				)}
 				<a
 					className="button button--quiet button--small"
 					href={`/api/reports/${report.id}`}

@@ -1,7 +1,13 @@
 const number = new Intl.NumberFormat('en-US')
+const list = new Intl.ListFormat('en-GB', { style: 'long', type: 'conjunction' })
 
 export function formatNumber(n: number): string {
 	return number.format(n)
+}
+
+/** "a, b and c". */
+export function formatList(items: string[]): string {
+	return list.format(items)
 }
 
 export function formatCount(n: number, singular: string, plural = `${singular}s`): string {

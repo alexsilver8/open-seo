@@ -26,7 +26,13 @@ const ReportPage = async (props: PageProps<'/report/[id]'>) => {
 	])
 	if (!report) notFound()
 
-	return <ReportScreen report={report} settings={settings} />
+	return (
+		<ReportScreen
+			report={report}
+			settings={settings}
+			linkToWorkspace={!process.env.ADMIN_PASSWORD}
+		/>
+	)
 }
 
 export default ReportPage
