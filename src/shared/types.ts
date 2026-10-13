@@ -211,7 +211,7 @@ export interface CrawlSummary {
 }
 
 export type SharePlatform =
-	'google' | 'facebook' | 'x' | 'linkedin' | 'slack' | 'discord' | 'whatsapp' | 'imessage'
+	'google' | 'facebook' | 'x' | 'linkedin' | 'slack' | 'discord' | 'whatsapp' | 'imessage' | 'telegram'
 
 /** An image we downloaded and measured: a share image or an icon. */
 export interface ImageAsset {

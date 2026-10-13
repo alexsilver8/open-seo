@@ -137,6 +137,50 @@ const PreviewFrame = (props: PreviewFrameProps) => {
 					<span className="mock-whatsapp-link">{displayUrl}</span>
 				</div>
 			)
+		case 'telegram':
+			return (
+				<div className={`mock mock-telegram is-${layout}`}>
+					<div className="mock-telegram-header">
+						<span className="mock-telegram-heading">
+							<span className="mock-telegram-dot" />
+							<strong>Telegram</strong>
+						</span>
+						<span className="mock-telegram-kind">Chat message</span>
+					</div>
+
+					<div className="mock-telegram-body">
+						<div className="mock-telegram-card">
+							<span className="mock-telegram-domain">{domain}</span>
+
+							<div className="mock-telegram-content">
+								<div className="mock-telegram-copy">
+									{siteName && (
+										<strong className="mock-telegram-site">{siteName}</strong>
+									)}
+									<strong className="mock-clamp-2">{title}</strong>
+									{description && (
+										<span className="mock-clamp-3">{description}</span>
+									)}
+								</div>
+
+								{layout === 'small' && hasImage && (
+									<PreviewImage
+										className="mock-image mock-telegram-thumb"
+										src={image}
+									/>
+								)}
+							</div>
+
+							{layout === 'large' && hasImage && (
+								<PreviewImage
+									className="mock-image mock-telegram-image"
+									src={image}
+								/>
+							)}
+						</div>
+					</div>
+				</div>
+			)
 		case 'imessage':
 			return (
 				<div className={`mock mock-imessage is-${layout}`}>

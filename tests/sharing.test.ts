@@ -201,6 +201,7 @@ describe('buildPreviews', () => {
 			'slack',
 			'discord',
 			'whatsapp',
+			'telegram',
 			'imessage'
 		] as const) {
 			expect(preview(platform).domain).toBe('shop.example.com')
@@ -212,6 +213,7 @@ describe('buildPreviews', () => {
 		expect(preview('facebook').layout).toBe('large')
 		expect(preview('linkedin').layout).toBe('large')
 		expect(preview('whatsapp').layout).toBe('large')
+		expect(preview('telegram').layout).toBe('large')
 		expect(preview('imessage').layout).toBe('large')
 		expect(preview('facebook').siteName).toBe('Example Shop')
 	})

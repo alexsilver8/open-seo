@@ -354,6 +354,33 @@ function whatsapp(input: PreviewInput, shared: Shared): SharePreview {
 	}
 }
 
+function telegram(input: PreviewInput, shared: Shared): SharePreview {
+	const { meta, ogImage } = input
+	const notes: PreviewNote[] = []
+	let layout: SharePreview['layout'] = 'none'
+
+	if (!meta.ogImage) {
+		notes.push({ tone: 'warn', text: 'No og:image, so Telegram shows text only.' })
+	} else if (!usable(ogImage)) {
+		notes.push(brokenNote(ogImage ?? { url: meta.ogImage, status: null, ok: false }))
+	} else {
+		layout = 'large'
+	}
+
+	return {
+		domain: shared.domain,
+		siteName: shared.siteName,
+		platform: 'telegram',
+		name: 'Telegram',
+		title: shared.ogTitle,
+		description: shared.ogDescription,
+		displayUrl: shared.domain,
+		image: layout === 'none' ? undefined : ogImage?.url,
+		layout,
+		notes: done(notes)
+	}
+}
+
 function imessage(input: PreviewInput, shared: Shared): SharePreview {
 	const { ogImage, icons } = input
 	const icon = appleIcon(icons) ?? bestFavicon(icons)
@@ -400,7 +427,7 @@ export function buildPreviews(input: PreviewInput): SharePreview[] {
 		ogDescription: meta.og['og:description'] || description || undefined
 	}
 
-	return [google, facebook, x, linkedin, slack, discord, whatsapp, imessage].map((platform) =>
-		platform(input, shared)
+	return [google, facebook, x, linkedin, slack, discord, whatsapp, telegram, imessage].map(
+		(platform) => platform(input, shared)
 	)
 }

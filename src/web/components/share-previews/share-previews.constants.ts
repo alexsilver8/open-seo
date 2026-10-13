@@ -9,7 +9,8 @@ export const PLATFORM_KIND: Record<SharePlatform, string> = {
 	slack: 'Message unfurl',
 	discord: 'Message embed',
 	whatsapp: 'Chat message',
-	imessage: 'Message'
+	imessage: 'Message',
+	telegram: 'Chat message'
 }
 
 /** Worst first, to pick the mark a platform's tab gets. */

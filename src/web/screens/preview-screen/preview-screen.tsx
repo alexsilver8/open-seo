@@ -30,7 +30,7 @@ const PreviewScreen = (props: PreviewScreenProps) => {
 			<PageHeader
 				eyebrow="Audit"
 				title="Share preview"
-				description="See how a link looks on Google, Facebook, X, LinkedIn, Slack, Discord, WhatsApp and iMessage, and check its share image, favicon and app icons."
+				description="See how a link looks on Google, Facebook, X, LinkedIn, Slack, Discord, WhatsApp, Telegram and iMessage, and check its share image, favicon and app icons."
 			/>
 			<PreviewForm initialUrl={initialUrl} pending={pending} onCheck={handleCheck} />
 			{error && !pending && (

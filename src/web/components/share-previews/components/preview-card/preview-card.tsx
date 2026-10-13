@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { StatusMark } from '@web/components/status-mark'
 import { PLATFORM_KIND } from '@web/components/share-previews/share-previews.constants'
 import { previewTone } from '@web/components/share-previews/share-previews.utils'
@@ -9,6 +9,13 @@ import type { PreviewCardProps } from './preview-card.types'
 const PreviewCard = (props: PreviewCardProps) => {
 	const { preview } = props
 
+	const [telegramLayout, setTelegramLayout] = useState<'small' | 'large'>('large')
+
+	const displayPreview =
+	preview.platform === 'telegram' && preview.layout !== 'none'
+		? { ...preview, layout: telegramLayout }
+		: preview
+
 	const headingId = `share-${preview.platform}`
 
 	return (
@@ -18,8 +25,26 @@ const PreviewCard = (props: PreviewCardProps) => {
 				<h3 id={headingId}>{preview.name}</h3>
 				<span className="muted">{PLATFORM_KIND[preview.platform]}</span>
 			</header>
-			<div className={`share-stage share-stage--${preview.platform}`}>
-				<PreviewFrame preview={preview} />
+			<div className={`share-stage share-stage--${displayPreview.platform}`}>
+				{preview.platform === 'telegram' && (
+					<div className="telegram-layout-toggle" aria-label="Telegram preview layout">
+						<button
+							type="button"
+							aria-pressed={telegramLayout === 'small'}
+							onClick={() => setTelegramLayout('small')}
+						>
+							Small
+						</button>
+						<button
+							type="button"
+							aria-pressed={telegramLayout === 'large'}
+							onClick={() => setTelegramLayout('large')}
+						>
+							Large
+						</button>
+					</div>
+				)}
+				<PreviewFrame preview={displayPreview} />
 			</div>
 			<ul className="share-notes">
 				{preview.notes.map((note) => (

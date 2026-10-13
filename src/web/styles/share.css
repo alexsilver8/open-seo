@@ -570,6 +570,150 @@
 	overflow-wrap: anywhere;
 }
 
+
+/* Telegram */
+.mock-telegram {
+	max-width: 360px;
+	overflow: hidden;
+	border: 1px solid #dfe3e8;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #202938;
+	font-size: 13px;
+}
+
+.mock-telegram-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 10px 12px;
+	background: #ffffff;
+}
+
+.mock-telegram-heading {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.mock-telegram-dot {
+	width: 14px;
+	height: 14px;
+	flex: none;
+	border-radius: 50%;
+	background: #e99a00;
+}
+
+.mock-telegram-kind {
+	color: #8490a2;
+	font-size: 12px;
+}
+
+.mock-telegram-body {
+	padding: 12px;
+	background: linear-gradient(135deg, #dce9c8, #b9d7a9);
+}
+
+.mock-telegram-card {
+	padding: 9px;
+	border-radius: 12px;
+	background: #efffdf;
+	min-width: 0;
+}
+
+.mock-telegram-domain {
+	display: block;
+	margin-bottom: 6px;
+	color: #42a846;
+	font-size: 12px;
+	overflow-wrap: anywhere;
+}
+
+.mock-telegram-content {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 8px;
+	border-left: 3px solid #42a846;
+	border-radius: 5px;
+	background: #d9f2cb;
+	min-width: 0;
+}
+
+.mock-telegram-copy {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+	line-height: 1.4;
+	overflow-wrap: anywhere;
+}
+
+.mock-telegram-site {
+	color: #329c3a;
+}
+
+.mock-telegram .mock-image {
+	display: block;
+	object-fit: cover;
+}
+
+.mock-telegram-image {
+	width: 100%;
+	margin-top: 8px;
+	border-radius: 5px;
+	aspect-ratio: 16 / 9;
+}
+
+.mock-telegram-thumb {
+	width: 60px;
+	height: 60px;
+	flex: none;
+	border-radius: 5px;
+}
+
+.mock-telegram.is-small .mock-telegram-image {
+	display: none;
+}
+
+.mock-telegram.is-large .mock-telegram-thumb {
+	display: none;
+}
+
+.mock-telegram.is-none .mock-telegram-content {
+	border-left: 3px solid #42a846;
+}
+
+.telegram-layout-toggle {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 10px;
+}
+
+.telegram-layout-toggle button {
+	padding: 4px 10px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--surface);
+	color: inherit;
+	cursor: pointer;
+}
+
+.telegram-layout-toggle button[aria-pressed='true'] {
+	border-color: var(--accent);
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+
+.mock-telegram.is-none .mock-telegram-image,
+.mock-telegram.is-none .mock-telegram-thumb,
+.mock-telegram.is-none .preview-image-missing {
+	display: none;
+}
+
 /* iMessage */
 
 .mock-imessage {
