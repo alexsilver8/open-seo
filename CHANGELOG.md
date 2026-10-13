@@ -2,6 +2,13 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
+## [0.4.0](https://github.com/openwarelabs/open-seo/compare/v0.3.0...v0.4.0) (2026-10-13)
+
+
+### Features
+
+* add a Telegram link preview ([#19](https://github.com/openwarelabs/open-seo/issues/19)) ([365ee81](https://github.com/openwarelabs/open-seo/commit/365ee818385900b5a0727dfcb6b18cc394239851))
+
 ## [0.3.0](https://github.com/alexsilver8/open-seo/compare/v0.2.0...v0.3.0) (2026-10-11)
 
 ### Compare two audits
