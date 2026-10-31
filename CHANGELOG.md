@@ -2,6 +2,14 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
+## [0.4.0](https://github.com/alexsilver8/open-seo/compare/v0.3.0...v0.4.0) (2026-10-31)
+
+
+### Features
+
+* add a Telegram link preview ([#19](https://github.com/alexsilver8/open-seo/issues/19)) ([365ee81](https://github.com/alexsilver8/open-seo/commit/365ee818385900b5a0727dfcb6b18cc394239851))
+* keep data in Upstash Redis on hosts like Vercel ([#25](https://github.com/alexsilver8/open-seo/issues/25)) ([27108f4](https://github.com/alexsilver8/open-seo/commit/27108f406a65645a6a360d9bc4d013ef1c2031e3))
+
 ## [0.3.0](https://github.com/alexsilver8/open-seo/compare/v0.2.0...v0.3.0) (2026-10-11)
 
 ### Compare two audits
