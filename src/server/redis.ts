@@ -14,7 +14,9 @@ export interface RedisConfig {
  * Upstash's own variable names, or the KV_* names Vercel's Upstash integration sets. Returns
  * null when neither pair is there, and OpenSEO keeps its data in files.
  */
-export function redisConfig(env: NodeJS.ProcessEnv = process.env): RedisConfig | null {
+export function redisConfig(
+	env: Record<string, string | undefined> = process.env
+): RedisConfig | null {
 	const url = env.UPSTASH_REDIS_REST_URL || env.KV_REST_API_URL
 	const token = env.UPSTASH_REDIS_REST_TOKEN || env.KV_REST_API_TOKEN
 	if (!url || !token) return null
