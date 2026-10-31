@@ -124,6 +124,14 @@ pnpm dev             # http://localhost:3000
 
 Or for a faster production build: `pnpm build && pnpm start`.
 
+### On Vercel
+
+Vercel doesn't keep files between requests, so OpenSEO keeps its data in Redis there instead.
+In the project's **Storage** tab, add **Upstash for Redis** (it has a free plan) and redeploy.
+The integration sets `KV_REST_API_URL` and `KV_REST_API_TOKEN`, and OpenSEO picks them up on
+its own. Monitors run on a timer inside the server, which Vercel pauses between requests, so
+use Docker if you rely on them.
+
 ### Settings
 
 Everything below is optional. With `docker run`, pass them with `-e`; with Compose, put them in a
@@ -134,6 +142,7 @@ Everything below is optional. With `docker run`, pass them with `-e`; with Compo
 | `PAGESPEED_API_KEY`      | A free Google PageSpeed key for Core Web Vitals and screenshots. You can also add it in Settings   |
 | `ADMIN_PASSWORD`         | Asks for a password (user `admin`) on history, the crawler and settings                            |
 | `OPENSEO_DATA_DIR`       | Where data is stored. Defaults to `./data`                                                         |
+| `UPSTASH_REDIS_REST_URL` | With `UPSTASH_REDIS_REST_TOKEN`, keeps data in Upstash Redis instead (see On Vercel)               |
 | `OPENSEO_RATE_LIMIT`     | Audits per visitor per hour, and the same number of share previews. Defaults to 60; 0 turns it off |
 | `OPENSEO_MAX_CONCURRENT` | Audits and crawls running at once. Defaults to 4                                                   |
 | `OPENSEO_ALLOW_PRIVATE`  | Set to `true` to audit localhost and private networks                                              |
@@ -408,7 +417,7 @@ Everything is plain JSON in the data folder:
 | `monitors.json`     | Monitors and their recent runs |
 | `settings.json`     | Branding and options           |
 
-Back it up by copying the folder.
+Back it up by copying the folder. With Redis, the same names are keys starting `openseo:`.
 
 ## Good to know
 
